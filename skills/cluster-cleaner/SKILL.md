@@ -33,7 +33,33 @@ k8s-cleaner is a Kubernetes controller that helps maintain clean and efficient c
 
 ## 1. INSTALLATION
 
-### Helm Installation
+### Option 1: kubectl (Recommended - No Helm Required)
+
+Using the install script:
+```bash
+# Install latest version
+bash skills/cluster-cleaner/scripts/install-cleaner.sh
+
+# Install specific version
+bash skills/cluster-cleaner/scripts/install-cleaner.sh -v v0.18.0
+
+# Install in custom namespace
+bash skills/cluster-cleaner.sh -n my-namespace
+
+# Upgrade existing installation
+bash skills/cluster-cleaner/scripts/install-cleaner.sh --upgrade
+
+# Uninstall
+bash skills/cluster-cleaner/scripts/install-cleaner.sh --uninstall
+```
+
+Or manually using kubectl:
+```bash
+# Apply the manifest directly
+kubectl apply -f https://raw.githubusercontent.com/gianlucam76/k8s-cleaner/v0.19.1/manifest/manifest.yaml
+```
+
+### Option 2: Helm Installation
 
 ```bash
 # Add the Sveltos Helm repository
@@ -641,22 +667,38 @@ This skill includes automation scripts in the `scripts/` directory:
 
 | Script | Purpose |
 |--------|---------|
-| `install-cleaner.sh` | Install k8s-cleaner via Helm |
+| `install-cleaner.sh` | Install/upgrade/uninstall k8s-cleaner using kubectl |
 | `create-cleaner.sh` | Generate Cleaner YAML from templates |
+| `deploy-example.sh` | Deploy example Cleaner configurations |
+| `cleaner-logs.sh` | View logs, status, and debug Cleaner |
 | `validate-lua.sh` | Validate Lua evaluation scripts |
 | `cleanup-summary.sh` | Get summary of Cleaner resources |
 
 ### Usage
 
 ```bash
-# Install k8s-cleaner
-bash scripts/install-cleaner.sh
+# Install k8s-cleaner (no Helm required!)
+bash skills/cluster-cleaner/scripts/install-cleaner.sh
+
+# Install specific version
+bash skills/cluster-cleaner/scripts/install-cleaner.sh -v v0.18.0
+
+# Upgrade existing installation
+bash skills/cluster-cleaner/scripts/install-cleaner.sh --upgrade
 
 # Create a Cleaner for unused ConfigMaps
-bash scripts/create-cleaner.sh configmap --schedule "0 0 * * *" --action Delete
+bash skills/cluster-cleaner/scripts/create-cleaner.sh configmap --schedule "0 0 * * *" --action Delete
+
+# Deploy example configurations
+bash skills/cluster-cleaner/scripts/deploy-example.sh -e configmap
+bash skills/cluster-cleaner/scripts/deploy-example.sh -e job -a Delete
+
+# View logs and status
+bash skills/cluster-cleaner/scripts/cleaner-logs.sh -f
+bash skills/cluster-cleaner/scripts/cleaner-logs.sh -c
 
 # Validate Lua script
-bash scripts/validate-lua.sh /path/to/lua-script.lua
+bash skills/cluster-cleaner/scripts/validate-lua.sh /path/to/lua-script.lua
 ```
 
 ---
